@@ -58,24 +58,30 @@ proxy={{ newrelic_proxy }}
 {% endif %}
 
 #
-# Option : ssl
-# Value  : Whether or not to use the Secure Sockets Layer (SSL) for all
-#          communication with the New Relic collector. Possible values are
-#          true/on or false/off. In certain rare cases you may need to modify
-#          the SSL certificates settings below.
-# Default: false
+# Setting: ssl
+# Type   : boolean
+# Purpose: If you prefer the daemon to use the secure HTTP (https) protocol
+#          when communicating with the New Relic collector servers, set this
+#          to true.
+# Default: true (as of version 1.4)
 #
+{% if newrelic_ssl|default(False) != False %}
 ssl={{ newrelic_ssl }}
+{% else %}
+#ssl=true
+{% endif %}
 
 #
-# Option : ssl_ca_bundle
-# Value  : The name of a PEM-encoded Certificate Authority (CA) bundle to use
-#          for SSL connections. This very rarely needs to be set. The monitor
-#          will attempt to find the bundle in the most common locations. If
-#          you need to use SSL and the monitor is unable to locate a CA bundle
-#          then either set this value or the ssl_ca_path option below.
-# Default: /etc/ssl/certs/ca-certificates.crt or
-#          /etc/pki/tls/certs/ca-bundle.crt
+# Setting: ssl_ca_bundle
+# Type   : string
+# Purpose: Sets the location of a file containing CA certificates in PEM
+#          format. When set, the certificates in this file will be used
+#          to authenticate the New Relic collector servers. If ssl_ca_path
+#          is also set (see below), the certificates in this file will be
+#          searched first, followed by the certificates contained in the
+#          ssl_ca_path directory. This setting has no effect when ssl
+#          is set to false.
+# Default: none
 # Note   : Can also be set with the -b command line option.
 #
 {% if newrelic_ssl_ca_bundle|default(False) != False %}
@@ -85,11 +91,15 @@ ssl_ca_bundle={{ newrelic_ssl_ca_bundle }}
 {% endif %}
 
 #
-# Option : ssl_ca_path
-# Value  : If your SSL installation does not use CA bundles, but rather has a
-#          directory with PEM-encoded Certificate Authority files, set this
-#          option to the name of the directory that contains all the CA files.
-# Default: /etc/ssl/certs
+# Setting: ssl_ca_path
+# Type   : string
+# Purpose: Sets the location of a directory containing trusted CA certificates
+#          in PEM format. When set, the certificates in this directory will be
+#          used to authenticate the New Relic collector servers. If
+#          ssl_ca_bundle is also set (see above), it will be searched first
+#          followed by the certificates contained in ssl_ca_path. This
+#          setting has no effect when ssl is set to false.
+# Default: none
 # Note   : Can also be set with the -S command line option.
 #
 {% if newrelic_ssl_ca_path|default(False) != False %}
@@ -107,7 +117,11 @@ ssl_ca_path={{ newrelic_ssl_ca_path }}
 # Default: /tmp/nrsysmond.pid
 # Note   : Can also be set with the -p command line option.
 #
+{% if newrelic_pidfile|default(False) != False %}
 pidfile={{ newrelic_pidfile }}
+{% else %}
+#pidfile=/var/run/newrelic/nrsysmond.pid
+{% endif %}
 
 #
 # Option : collector_host
@@ -118,7 +132,11 @@ pidfile={{ newrelic_pidfile }}
 #          if SSL is enabled. If the port is omitted the default value is used.
 # Default: collector.newrelic.com
 #
+{% if newrelic_collector_host|default(False) != False %}
 collector_host={{ newrelic_collector_host }}
+{% else %}
+#collector_host=collector.newrelic.com
+{% endif %}
 
 #
 # Option : timeout
@@ -132,4 +150,8 @@ collector_host={{ newrelic_collector_host }}
 #          once the original connection has been made. The value is in seconds.
 # Default: 30
 #
+{% if newrelic_timeout|default(False) != False %}
 timeout={{ newrelic_timeout }}
+{% else %}
+#timeout=30
+{% endif %}
