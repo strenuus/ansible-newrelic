@@ -20,6 +20,7 @@
     group: newrelic
     owner: root
     mode: 0640
+  sudo: true
   notify:
     - Restart New Relic
   when: newrelic_loaded_os_family|default(False) != False
@@ -29,3 +30,4 @@
     name: newrelic-sysmond
     state: started
     enabled: yes
+  sudo: true

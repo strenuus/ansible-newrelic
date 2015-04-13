@@ -8,16 +8,19 @@
     url: https://download.newrelic.com/548C16BF.gpg
     id: 548C16BF
     state: present
+  sudo: true
 
 - name: Debian | Add New Relic repository
-  apt_repository: 
+  apt_repository:
     repo: 'deb http://apt.newrelic.com/debian/ newrelic non-free'
     state: present
     update_cache: yes
+  sudo: true
 
 - name: Debian | Install New Relic Sysmond
   apt:
     pkg: newrelic-sysmond
     state: latest
+  sudo: true
   notify:
     - Restart New Relic
